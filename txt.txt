@@ -1,0 +1,28 @@
+{
+    "firstName":"athul",
+    "lastName":"jain",
+    "userName":"athuljain",
+    "email":"athul@gmail.com",
+    "password":"111",
+    "confirmPassword",
+    
+    
+}
+
+admin
+
+{
+    "email":"admin@gmail.com",
+    "password":"admin123"
+}
+
+
+
+admin/product  post
+{
+        "title":"Men Gray Classic",
+        "description":"men gray classic fit soild full sleeves formal shirt",
+        "price":"2699",
+        "image":"",
+        "category":"formal"
+}

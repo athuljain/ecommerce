@@ -1,0 +1,5 @@
+- Seperate if conditions.
+- Add try and catch on every routes.
+- The response on every route should follow this structure `{status: 'success or failure', status_code: code, error_message: '(if there is an error) A message that should be understand by clients.', message: 'Successfully Created an Account...etc.' data: your_data}`
+- create routes folder.
+- Postman collection setup Admin and User.
