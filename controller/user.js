@@ -27,8 +27,8 @@ const userLogin =async (req,res)=>{
             return
     }
         res.status(401).json({message:'wrong name or password'})   
-} catch(err){
-    console.log(err);
+} catch(error){
+    console.log(error);
     res.status(500).json({error:'server error', error:error.message})
 }
 };
