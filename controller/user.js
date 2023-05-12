@@ -2,14 +2,14 @@
 
 // const app=express()
 const jwt=require('jsonwebtoken')
-const cookiParser=require('cookie-parser')
-const session=require('express-session')
+// const cookiParser=require('cookie-parser')
+// const session=require('express-session')
 const productDatas=require('../model/productModel')
 const validator=require('validator')
 const Razorpay=require('razorpay')
 const schema=require('../model/userModel')
 
-const checkUserToken=require('../middileware/userMiddileware')
+//const checkUserToken=require('../middileware/userMiddileware')
 
 
 // user login

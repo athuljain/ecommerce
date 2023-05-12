@@ -45,7 +45,6 @@ const mongoSchema= new mongoose.Schema({
             type:String,
 
         },
-        
         payment:{
             type:Number
         },
