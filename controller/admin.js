@@ -5,8 +5,7 @@ const jwt = require("jsonwebtoken");
 const schema = require("../model/userModel");
 const productDatas = require("../model/productModel");
 
-const checkAdminToken =require("../middileware/adminMiddileware")
-
+const checkAdminToken = require("../middileware/adminMiddileware");
 
 // admin login
 
@@ -20,8 +19,10 @@ const adminLogin = async (req, res) => {
       throw new Error("Invalid email or password");
     }
 
-    const token = jwt.sign({ email }, process.env.SECRET_KEY, { expiresIn: "1h",});
-    res.cookie('token',token)
+    const token = jwt.sign({ email }, process.env.SECRET_KEY, {
+      expiresIn: "1h",
+    });
+    res.cookie("token", token);
     res.setHeader("Authorization", token); //  token response to headers
 
     res.json({ message: "Welcome, Admin!", token });
@@ -30,87 +31,91 @@ const adminLogin = async (req, res) => {
   }
 };
 
-
 // create product
 
-const createProduct= async (req, res)=>{
-  try{
-  await productDatas.insertMany([
-    {
-      title: req.body.title,
-      description: req.body.description,
-      price: req.body.price,
-      image: req.body.image,
-      category: req.body.category,
-    },
-  ]);
- res.status(201).json({message: "Product created successfully"})
-} catch (error){
-  res.status(500).json({message : "Failed to create product", error:error.message})
-}
-}
-
-
+const createProduct = async (req, res) => {
+  try {
+    await productDatas.insertMany([
+      {
+        title: req.body.title,
+        description: req.body.description,
+        price: req.body.price,
+        image: req.body.image,
+        category: req.body.category,
+      },
+    ]);
+    res.status(201).json({ message: "Product created successfully" });
+  } catch (error) {
+    res
+      .status(500)
+      .json({ message: "Failed to create product", error: error.message });
+  }
+};
 
 // get users details
 
-const getUsers= async (req, res) => {
+const getUsers = async (req, res) => {
   try {
     const allUsers = await schema.find();
     res.status(200).json({ users: allUsers });
   } catch (error) {
     console.log(error);
-    res.status(500).json({ message: "internal server error", error:error.message });
+    res
+      .status(500)
+      .json({ message: "internal server error", error: error.message });
   }
 };
 
-
 // get specific user
-const getSpecificUser=async (req, res) => {
+const getSpecificUser = async (req, res) => {
   try {
-      const specificUser = await schema.findById(req.params.id);
-      if (!specificUser) {
-        res.status(404).json({message: "User not found", error:error.message})
-        return
-      } 
-        res.status(200).json({ message: "Specific User :", specificUser });
-      
+    const specificUser = await schema.findById(req.params.id);
+    if (!specificUser) {
+      res.status(404).json({ message: "User not found", error: error.message });
+      return;
+    }
+    res.status(200).json({ message: "Specific User :", specificUser });
   } catch (error) {
     console.log(error);
-    res.status(500).json({ message: "Server Error", error:error.message });
+    res.status(500).json({ message: "Server Error", error: error.message });
   }
 };
 
 // find all product details
 
-const getProducts= async (req, res) => {
+const getProducts = async (req, res) => {
   try {
     const allProducts = await productDatas.find();
-    res.status(200).json({message:"All Product List", allProducts})
+    res.status(200).json({ message: "All Product List", allProducts });
   } catch (error) {
-    res.status(404).json({ message: "All Product List Not Found: ",error:error.message });
+    res
+      .status(404)
+      .json({ message: "All Product List Not Found: ", error: error.message });
     console.log(error);
   }
 };
 
-const getSpecificProduct= async(req,res)=>{
-  try{
+const getSpecificProduct = async (req, res) => {
+  try {
     const specificProduct = await productDatas.findById(req.params.id);
     if (!specificProduct) {
-      res.status(404).json({message:"Specific Product not Found", error:error.message})
-      return
-    } 
-    res.status(200).json({message:'Specific Product details:', specificProduct})
-} catch (error) {
-  console.log(error);
-  res.status(500).json({ error: "Server Error" });
-}
+      res
+        .status(404)
+        .json({ message: "Specific Product not Found", error: error.message });
+      return;
+    }
+    res
+      .status(200)
+      .json({ message: "Specific Product details:", specificProduct });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ error: "Server Error" });
   }
-
+};
 
 // update product
 
-const updateProduct= async (req, res) => {
+const updateProduct = async (req, res) => {
   try {
     const id = req.params.id;
     const { title, description, price, image, category } = req.body;
@@ -129,60 +134,61 @@ const updateProduct= async (req, res) => {
   }
 };
 
- // delete product by id
+// delete product by id
 
-const deleteProduct= async (req, res) => {
+const deleteProduct = async (req, res) => {
   const id = req.params.id;
   console.log(req.params.id);
   try {
     const deletedProduct = await productDatas.deleteOne({ _id: id });
     console.log(deletedProduct);
     if (deletedProduct) {
-      res.status(200).json({ message: "Product deleted", product: deletedProduct });
-      return
+      res
+        .status(200)
+        .json({ message: "Product deleted", product: deletedProduct });
+      return;
     }
-    res.status(404).json({message:"Product not found"})
+    res.status(404).json({ message: "Product not found" });
   } catch (error) {
-      res.status(500).json({message:'Server Error' ,error: error.message });
+    res.status(500).json({ message: "Server Error", error: error.message });
   }
 };
 
-
 // find category wise
 
-const getCategoryWise= async (req, res) => {
-    const categoryList = req.params.category;
-    // console.log( 'fgfgfg')
+const getCategoryWise = async (req, res) => {
+  const categoryList = req.params.category;
+  // console.log( 'fgfgfg')
 
-    try {
-      let categoryProducts;
-      // seperate if conditions
-      if (categoryList.toLowerCase() === "formal") {
-        categoryProducts = await productDatas.find({
-          category: { $in: "formal" }
-        });
-        res.json(categoryProducts)
-        return
-      } 
-      if (categoryList.toLowerCase() === "casual") {
-        categoryProducts = await productDatas.find({
-          category: { $in: "casual" },
-        });
-        res.json(categoryProducts)
-        return
-      } 
-        categoryProducts = await productDatas.find({
-          category: { $in: categoryList },
-        });
+  try {
+    let categoryProducts;
+    // seperate if conditions
+    if (categoryList.toLowerCase() === "formal") {
+      categoryProducts = await productDatas.find({
+        category: { $in: "formal" },
+      });
       res.json(categoryProducts);
-    } catch (error) {
-      console.log(error);
-      res.status(500).json({ error: error.message, message:'Server Error' });
+      return;
     }
+    if (categoryList.toLowerCase() === "casual") {
+      categoryProducts = await productDatas.find({
+        category: { $in: "casual" },
+      });
+      res.json(categoryProducts);
+      return;
+    }
+    categoryProducts = await productDatas.find({
+      category: { $in: categoryList },
+    });
+    res.json(categoryProducts);
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ error: error.message, message: "Server Error" });
   }
+};
 
-  // get all orders list
-  
+// get all orders list
+
 const getAllOrders = async (req, res) => {
   try {
     const orders = await schema.find({}, { orders: 1 });
@@ -192,32 +198,34 @@ const getAllOrders = async (req, res) => {
   }
 };
 
-// get revenue 
+// get revenue
 const getRevenue = async (req, res) => {
   try {
-    const {startDate, endDate}= req.query //using for filtering date
+    const { startDate, endDate } = req.query; //using for filtering date
     const users = await schema.find();
     let totalAmount = 0;
-    let revenue=0;
+    let revenue = 0;
 
     users.forEach((user) => {
       user.orders.forEach((order) => {
-        if(order.orderDate >= new Date(startDate)&& order.orderDate <= new Date(endDate)){
-        totalAmount += order.payment;
-        revenue += order.payment * 0.2;
+        if (
+          order.orderDate >= new Date(startDate) &&
+          order.orderDate <= new Date(endDate)
+        ) {
+          totalAmount += order.payment;
+          revenue += order.payment * 0.2;
         }
       });
     });
-    res.status(200).json({ message:'total orders amount & revenue', totalAmount , revenue });
-    
+    res
+      .status(200)
+      .json({ message: "total orders amount & revenue", totalAmount, revenue });
   } catch (error) {
     res.status(500).json({ error: "server Error", error: error.message });
   }
 };
 
-
 module.exports = {
-  
   adminLogin,
   createProduct,
   getUsers,
@@ -228,6 +236,5 @@ module.exports = {
   getCategoryWise,
   getSpecificProduct,
   getAllOrders,
-  getRevenue
-  
-}
+  getRevenue,
+};
