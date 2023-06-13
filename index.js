@@ -1,10 +1,8 @@
 const express = require("express");
 const mongoose = require("mongoose");
-const bodyparser = require("body-parser");
 const cookieParser = require("cookie-parser");
 const dotenv = require("dotenv");
 const app = express();
-const session = require("express-session");
 
 dotenv.config();
 
@@ -20,19 +18,6 @@ mongoose
   });
 
 app.use(cookieParser());
-app.use(
-  session({
-    secret: "secretkey",
-    resave: false,
-    saveUninitialized: true,
-    cookie: {
-      maxAge: 60 * 60 * 1000, // 1 hour
-      httpOnly: true,
-      secure: true,
-      sameSite: "none",
-    },
-  })
-);
 
 // for admin routes
 const adminRoute = require("./routes/adminRoute");

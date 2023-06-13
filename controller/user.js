@@ -1,13 +1,10 @@
 // const app=express()
 const jwt = require("jsonwebtoken");
-// const cookiParser=require('cookie-parser')
-// const session=require('express-session')
+
 const productDatas = require("../model/productModel");
 const validator = require("validator");
 const Razorpay = require("razorpay");
 const schema = require("../model/userModel");
-
-//const checkUserToken=require('../middileware/userMiddileware')
 
 // user login
 
@@ -17,7 +14,6 @@ const userLogin = async (req, res) => {
     const login = await schema.findOne({ email: req.body.email });
     // check user email and password
     if (login.email == req.body.email && login.password == req.body.password) {
-      req.session.user = login;
       const token = jwt.sign({ email: login.email }, "secretkey");
       res.cookie("token", token);
       res.status(200).json({ message: "user logged successfully....." });
@@ -131,28 +127,6 @@ const getCategoryWise = async (req, res) => {
       .json({ message: "Internal Server Error", error: error.message });
   }
 };
-
-// const addCart = async (req, res) => {
-
-//     const productId = req.params.id;
-//     try {
-//       const product = await productDatas.findById(productId);
-//       if (!product) {
-//         return res.status(404).json({ error: "Product not found" });
-//       }
-//       const updatedUser = await schema.findOneAndUpdate(
-//         { _id: req.user._id },
-//         { $push: { cart: product._id } },
-//         { new: true }
-//       );
-//     //   console.log(req.headers.cookie);
-
-//       return res.json({ message: "Product added to cart", user: updatedUser });
-//     } catch (err) {
-//       console.error(err);
-//       return res.status(500).json({ error: "Server error" });
-//     }
-//   };
 
 // user add product to cart
 
@@ -316,11 +290,9 @@ const oderProduct = async (req, res) => {
     const { price } = product;
 
     if (price !== req.body.price) {
-      return res
-        .status(400)
-        .json({
-          message: "The entered price does not match the product price",
-        });
+      return res.status(400).json({
+        message: "The entered price does not match the product price",
+      });
     }
 
     const instance = new Razorpay({
